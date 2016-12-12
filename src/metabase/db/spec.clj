@@ -28,12 +28,13 @@
   "Create a database specification for a mysql database. Opts should include keys
   for :db, :user, and :password. You can also optionally set host and port.
   Delimiters are automatically set to \"`\"."
+
   [{:keys [host port db]
     :or {host "localhost", port 3306, db ""}
     :as opts}]
   (merge {:classname "com.mysql.jdbc.Driver" ; must be in classpath
           :subprotocol "mysql"
-          :subname (str "//" host ":" port "/" db)
+          :subname (str "//address=(protocol=tcp)(host=" host ")(port=" port ")/" db)
           :delimiters "`"}
          (dissoc opts :host :port :db)))
 

@@ -25,10 +25,16 @@
         (data/run-query exciting-moments-in-history))
       :data :rows))
 
+;; make sure connection use the "alternate format" supporting IPv6 addresses
+(expect
+  "//address=(protocol=tcp)(host=2001:0db8:0000:85a3:0000:0000:ac1f:8001)(port=3306)/cool?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&characterSetResults=UTF8&useSSL=false"
+  (:subname (sql/connection-details->spec (MySQLDriver.) {:host               "2001:0db8:0000:85a3:0000:0000:ac1f:8001"
+                                                          :port               "3306"
+                                                          :dbname             "cool"})))
 
 ;; make sure connection details w/ extra params work as expected
 (expect
-  "//localhost:3306/cool?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&characterSetResults=UTF8&useSSL=false&tinyInt1isBit=false"
+  "//address=(protocol=tcp)(host=localhost)(port=3306)/cool?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF8&characterSetResults=UTF8&useSSL=false&tinyInt1isBit=false"
   (:subname (sql/connection-details->spec (MySQLDriver.) {:host               "localhost"
                                                           :port               "3306"
                                                           :dbname             "cool"
